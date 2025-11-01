@@ -23,6 +23,7 @@ public class MultiplesOfTests
     public void TestMultiplesOf_Negative()
     {
         double[] multiples = Arrays.MultiplesOf(-2, 10);
+        Console.WriteLine(string.Join(", ", multiples));
         CollectionAssert.AreEqual(new double[] { -2, -4, -6, -8, -10, -12, -14, -16, -18, -20 }, multiples);
     }
 }

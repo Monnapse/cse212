@@ -1,3 +1,5 @@
+using Microsoft.VisualStudio.TestPlatform.CommunicationUtilities.ObjectModel;
+
 public static class Arrays
 {
     /// <summary>
@@ -13,7 +15,13 @@ public static class Arrays
         // step by step before you write the code. The plan should be clear enough that it could
         // be implemented by another person.
 
-        return []; // replace this return statement with your own
+        double[] result = new double[length]; // Create an array to hold the result
+        for (int i = 0; i < length; i++) // Loop from 0 to length
+        {
+            result[i] = number * (i + 1); // Calculate the multiple and store it in the array
+        }
+
+        return result; // replace this return statement with your own
     }
 
     /// <summary>
@@ -29,5 +37,20 @@ public static class Arrays
         // Remember: Using comments in your program, write down your process for solving this problem
         // step by step before you write the code. The plan should be clear enough that it could
         // be implemented by another person.
+
+        // Check if data can elements rotate
+        if (data == null || data.Count == 0 || amount <= 0 || data.Count < amount)
+        {
+            return; // No rotation needed
+        }
+
+        List<int> temp = new List<int>(data); // Create a temporary copy of the original list
+
+        List<int> rotatedPart = temp.GetRange(data.Count - amount, amount); // Get the last 'amount' elements
+        List<int> remainingPart = temp.GetRange(0, data.Count - amount); // Get the remaining elements
+
+        data.Clear(); // Clear the original list
+        data.AddRange(rotatedPart); // Add the rotated elements
+        data.AddRange(remainingPart); // Add the remaining elements
     }
 }
