@@ -25,6 +25,34 @@ public class Maze
         _mazeMap = mazeMap;
     }
 
+    // Makes things easier by combining common code
+    public void Move(int x = 0, int y = 0)
+    {
+        int directionIndex;
+
+        if (x == -1 && y == 0) directionIndex = 0; // left
+        else if (x == 1 && y == 0) directionIndex = 1; // right
+        else if (x == 0 && y == 1) directionIndex = 2; // up
+        else if (x == 0 && y == -1) directionIndex = 3; // down
+        else throw new ArgumentException("Invalid move direction.");
+
+        var currentKey = (_currX, _currY);
+
+        // Get current cell
+        if (!_mazeMap.ContainsKey(currentKey))
+            throw new InvalidOperationException("Can't go that way!");
+
+        // Check if this direction is allowed
+        if (!_mazeMap[currentKey][directionIndex])
+            throw new InvalidOperationException("Can't go that way!");
+
+        // Move
+        _currX += x;
+        _currY += y;
+
+        Console.WriteLine(GetStatus());
+    }
+
     // TODO Problem 4 - ADD YOUR CODE HERE
     /// <summary>
     /// Check to see if you can move left.  If you can, then move.  If you
@@ -33,6 +61,7 @@ public class Maze
     public void MoveLeft()
     {
         // FILL IN CODE
+        Move(-1, 0);
     }
 
     /// <summary>
@@ -42,6 +71,7 @@ public class Maze
     public void MoveRight()
     {
         // FILL IN CODE
+        Move(1, 0);
     }
 
     /// <summary>
@@ -51,6 +81,7 @@ public class Maze
     public void MoveUp()
     {
         // FILL IN CODE
+        Move(0, 1);
     }
 
     /// <summary>
@@ -60,6 +91,7 @@ public class Maze
     public void MoveDown()
     {
         // FILL IN CODE
+        Move(0, -1);
     }
 
     public string GetStatus()

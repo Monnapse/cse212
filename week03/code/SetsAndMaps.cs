@@ -22,7 +22,40 @@ public static class SetsAndMaps
     public static string[] FindPairs(string[] words)
     {
         // TODO Problem 1 - ADD YOUR CODE HERE
-        return [];
+
+        var wordSet = new HashSet<string>(words); // Create a set for O(1) lookups
+        var pairs = new HashSet<string>(); // List to store the found pairs
+
+        foreach (var word in words) // Iterate through each word
+        {
+            string fullWord = word;
+            string firstChar = fullWord[0].ToString();
+            string secondChar = fullWord[1].ToString();
+            string reversed = secondChar + firstChar; // Reverse the word
+
+            if (firstChar == secondChar)
+            {
+                continue; // Skip if both characters are the same
+            }   
+
+            //string pair = $"{word} & {reversed}";
+            //string reversePair = $"{reversed} & {words[i]}";
+
+            if (wordSet.Contains(reversed)) // Check if the reversed word exists and is not the same word, and not already added to avoid duplicates.
+            {
+                // Normalize pair order to avoid duplicates (alphabetical order)
+                string pair = string.Compare(word, reversed) < 0 
+                    ? $"{word} & {reversed}" 
+                    : $"{reversed} & {word}";
+
+                pairs.Add(pair);
+                //Console.WriteLine($"Found pair: {pair}");
+            }
+
+            //Console.WriteLine($"({i}/{words.Length - 1}) Reverse of {words[i]} is {reversed}");
+        }
+
+        return pairs.ToArray(); // Convert the list to an array and return it
     }
 
     /// <summary>
@@ -41,8 +74,22 @@ public static class SetsAndMaps
         var degrees = new Dictionary<string, int>();
         foreach (var line in File.ReadLines(filename))
         {
-            var fields = line.Split(",");
+            var fields = line.Split(","); // Split line into columns
             // TODO Problem 2 - ADD YOUR CODE HERE
+
+            string degree = fields[3]; // 4th column is index 3
+            if (degrees.ContainsKey(degree))
+            {
+                degrees[degree]++; // Increment count if degree already exists
+            }
+            else
+            {
+                degrees[degree] = 1; // Initialize count if degree is new
+            }
+
+            //Console.WriteLine($"Processing line: {line}");
+            //Console.WriteLine($"Found degree: {degree}");
+            //Console.WriteLine($"Found degree: {degree}");
         }
 
         return degrees;
@@ -67,7 +114,48 @@ public static class SetsAndMaps
     public static bool IsAnagram(string word1, string word2)
     {
         // TODO Problem 3 - ADD YOUR CODE HERE
-        return false;
+        // Normalize words: remove spaces and convert to lowercase
+        string normalizedWord1 = word1.Replace(" ", "").ToLower();
+        string normalizedWord2 = word2.Replace(" ", "").ToLower();
+
+        // If lengths differ, they cannot be anagrams
+        if (normalizedWord1.Length != normalizedWord2.Length)
+        {
+            return false;
+        }
+
+        var charCount = new Dictionary<char, int>();
+
+        // Count characters in the first word
+        foreach (char c in normalizedWord1)
+        {
+            if (charCount.ContainsKey(c))
+            {
+                charCount[c]++;
+            }
+            else
+            {
+                charCount[c] = 1;
+            }
+        }
+
+        foreach (char c in normalizedWord2)
+        {
+            if (charCount.ContainsKey(c))
+            {
+                charCount[c]--;
+                if (charCount[c] < 0)
+                {
+                    return false; // More occurrences in word2 than in word1
+                }
+            }
+            else
+            {
+                return false; // Character in word2 not found in word1
+            }
+        }
+
+        return true;
     }
 
     /// <summary>
@@ -101,6 +189,20 @@ public static class SetsAndMaps
         // on those classes so that the call to Deserialize above works properly.
         // 2. Add code below to create a string out each place a earthquake has happened today and its magitude.
         // 3. Return an array of these string descriptions.
-        return [];
+
+        var summaries = new List<string>();
+
+        foreach (var feature in featureCollection.features)
+        {
+            // 1km NE of Pahala, Hawaii - Mag 2.36,
+            string place = feature.properties.place; // Location of the earthquake
+            double? magnitude = feature.properties.mag; // Magnitude of the earthquake
+            string summary = $"{place} - Mag {magnitude}";
+
+            //Console.WriteLine(description);
+            summaries.Add(summary);
+        }
+
+        return summaries.ToArray();
     }
 }
